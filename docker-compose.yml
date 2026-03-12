@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: csrf
+      POSTGRES_PASSWORD: csrf
+      POSTGRES_DB: csrf_lab
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    
+
+  api:
+    build: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://csrf:csrf@postgres:5432/csrf_lab?sslmode=disable
+
+  client:
+    image: nginx
+    volumes:
+      - ./client:/usr/share/nginx/html
+    ports:
+      - "3000:80"
+
+  attacker:
+    image: nginx
+    volumes:
+      - ./attacker:/usr/share/nginx/html
+    ports:
+      - "4000:80"

