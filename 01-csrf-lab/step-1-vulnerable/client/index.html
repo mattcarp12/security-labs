@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bank of Boise - Portal</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Secure Login</h2>
+    <form action="http://localhost:8080/login" method="POST" target="result_frame">
+        <input name="username" placeholder="Username" value="admin" />
+        <input name="password" type="password" placeholder="Password" value="password123" />
+        <button type="submit">Login</button>
+    </form>
+
+    <hr>
+
+    <form action="http://localhost:8080/transfer" method="POST" target="result_frame">
+        <input name="amount" value="100" />
+        <button type="submit">Transfer $100</button>
+    </form>
+
+    <hr>
+    <h3>Server Response:</h3>
+    <iframe name="result_frame" style="width: 100%; height: 50px; border: 1px solid #ccc;"></iframe>
+    <div id="result-text" style="margin-top: 10px; font-weight: bold; color: green;"></div>
+</body>
+
+</html>
