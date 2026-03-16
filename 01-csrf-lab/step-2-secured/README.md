@@ -1,8 +1,14 @@
-# Step 2: Secured with CSRF Tokens
+# Step 2: Secured via CSRF Tokens
 
-This phase of the lab patches the vulnerability by implementing the **Synchronizer Token Pattern**. 
+This folder demonstrates the **Synchronizer Token Pattern**, the industry-standard cryptographic defense against Cross-Site Request Forgery. 
 
-While the browser still automatically attaches the session cookie, the server now requires a secondary, explicitly provided "secret handshake" (the CSRF token) to process any state-changing requests.
+By requiring a unique, unguessable token on every state-changing request, the server can definitively verify that the request originated from the legitimate frontend, not a hidden attacker script.
+
+## The Defensive Mechanics
+1. **Token Generation:** Upon login, the Go backend generates a cryptographically secure 32-byte string and stores it in the database alongside the user's session.
+2. **Explicit Fetching:** The frontend JavaScript explicitly requests this token (`GET /csrf-token`).
+3. **The Same-Origin Policy (SOP):** If an attacker tries to fetch this token from their malicious domain, the browser's built-in SOP blocks them from reading the response. 
+4. **Request Validation:** The frontend attaches the token as a custom header (`X-CSRF-Token`). The backend rejects any transfer request that lacks a matching token.
 
 ## How to Start the Lab
 
