@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: xss
+      POSTGRES_PASSWORD: xss
+      POSTGRES_DB: xss_lab
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build: ./server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://xss:xss@postgres:5432/xss_lab?sslmode=disable
+
+  client:
+    image: nginx:alpine
+    volumes:
+      - ./client:/usr/share/nginx/html
+    ports:
+      - "3000:80"
+
+  # The Attacker now has a Go backend to catch stolen data
+  attacker:
+    build: ./attacker
+    ports:
+      - "4000:4000"
