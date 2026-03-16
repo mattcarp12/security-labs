@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vulnerable Forum</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .comment { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #f9f9f9;}
+    </style>
+</head>
+<body>
+    <h2>Forum Login</h2>
+    <button onclick="login()">Login to get Session Cookie</button>
+
+    <h2>Leave a Comment</h2>
+    <input id="author" placeholder="Your Name" value="Anonymous" /><br><br>
+    <textarea id="content" placeholder="Write something..." rows="4" cols="50"></textarea><br><br>
+    <button onclick="postComment()">Submit</button>
+
+    <h2>Comments</h2>
+    <div id="comment-section"></div>
+
+    <script>
+        async function login() {
+            await fetch('http://localhost:8080/login', { credentials: 'include' });
+            alert("Logged in! Cookie stored in browser.");
+        }
+
+        async function loadComments() {
+            const res = await fetch('http://localhost:8080/comments');
+            const comments = await res.json();
+            
+            const section = document.getElementById('comment-section');
+            section.innerHTML = ''; // Clear existing
+
+            comments.forEach(c => {
+                // VULNERABLE RENDERING: innerHTML parses text as executable HTML/JS
+                section.innerHTML += `
+                    <div class="comment">
+                        <strong>${c.author}</strong>: <p>${c.content}</p>
+                    </div>
+                `;
+            });
+        }
+
+        async function postComment() {
+            const author = document.getElementById('author').value;
+            const content = document.getElementById('content').value;
+
+            await fetch('http://localhost:8080/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ author, content })
+            });
+
+            loadComments(); // Reload to see the new comment
+        }
+
+        // Load comments on startup
+        loadComments();
+    </script>
+</body>
+</html>

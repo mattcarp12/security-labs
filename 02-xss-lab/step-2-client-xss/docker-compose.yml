@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "8080:8080"
+
+  client:
+    image: nginx:alpine
+    volumes:
+      - ./client:/usr/share/nginx/html
+    ports:
+      - "3000:80"
