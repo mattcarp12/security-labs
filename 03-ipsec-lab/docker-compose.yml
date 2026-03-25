@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  alice:
+    build: .
+    container_name: ipsec-alice
+    cap_add:
+      - NET_ADMIN
+    networks:
+      ipsec_net:
+        ipv4_address: 10.0.0.10
+    volumes:
+      # Map the files directly to the root /etc/ locations
+      - ./configs/alice/ipsec.conf:/etc/ipsec.conf
+      - ./configs/alice/ipsec.secrets:/etc/ipsec.secrets
+      - ./scripts:/scripts
+
+  bob:
+    build: .
+    container_name: ipsec-bob
+    cap_add:
+      - NET_ADMIN
+    networks:
+      ipsec_net:
+        ipv4_address: 10.0.0.20
+    volumes:
+      # Map the files directly to the root /etc/ locations
+      - ./configs/bob/ipsec.conf:/etc/ipsec.conf
+      - ./configs/bob/ipsec.secrets:/etc/ipsec.secrets
+      - ./scripts:/scripts
+
+networks:
+  ipsec_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
