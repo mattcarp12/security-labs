@@ -1,0 +1,3 @@
+# This is our test user trying to plug into the network
+"alice" Cleartext-Password := "SecurityPlus8021x!"
+    Reply-Message = "Welcome to the Secure Network, Alice!"

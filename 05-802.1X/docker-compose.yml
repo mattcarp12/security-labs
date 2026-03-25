@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  radius-server:
+    image: freeradius/freeradius-server:latest
+    container_name: 8021x-radius
+    command: "-X"
+    ports:
+      - "1812:1812/udp" # Standard RADIUS Authentication Port
+      - "1813:1813/udp" # Standard RADIUS Accounting Port
+    volumes:
+      - ./freeradius/clients.conf:/etc/raddb/clients.conf
+      - ./freeradius/users:/etc/raddb/users
